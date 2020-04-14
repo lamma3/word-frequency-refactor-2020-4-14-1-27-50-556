@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class WordFrequencyGame {
 
@@ -10,7 +12,7 @@ public class WordFrequencyGame {
     public String getResult(String sentence) {
         try {
             String[] sentenceSplitBySpace = splitBySpace(sentence);
-            List<WordCount> wordCountList = calculateWordCount(sentenceSplitBySpace);
+            List<WordCount> wordCountList = calculateWordCount(Arrays.asList(sentenceSplitBySpace));
             return formatWordCountResult(wordCountList);
         } catch (Exception e) {
             return CALCULATE_ERROR_MESSAGE;
@@ -18,43 +20,18 @@ public class WordFrequencyGame {
     }
 
     private String[] splitBySpace(String sentence) {
-        //split the input string with 1 to n pieces of spaces
         return sentence.split(SPACE_DELIMITER_PATTERN);
     }
 
-    private List<WordCount> calculateWordCount(String[] sentenceSplitBySpace) {
-        List<WordCount> wordCountList = new ArrayList<>();
-        for (String word : sentenceSplitBySpace) {
-            WordCount wordCount = new WordCount(word, 1);
-            wordCountList.add(wordCount);
-        }
-
-        //get the map for the next step of sizing the same word
-        Map<String, List<WordCount>> map = getListMap(wordCountList);
-
-        List<WordCount> list = new ArrayList<>();
-        for (Map.Entry<String, List<WordCount>> entry : map.entrySet()) {
-            WordCount wordCount = new WordCount(entry.getKey(), entry.getValue().size());
-            list.add(wordCount);
-        }
-        wordCountList = list;
-
-        wordCountList.sort((wordCount1, wordCount2) -> wordCount2.getCount() - wordCount1.getCount());
-        return wordCountList;
-    }
-
-    private Map<String, List<WordCount>> getListMap(List<WordCount> wordCountList) {
-        Map<String, List<WordCount>> map = new HashMap<>();
-        for (WordCount wordCount : wordCountList) {
-            if (!map.containsKey(wordCount.getWord())) {
-                List<WordCount> arr = new ArrayList<>();
-                arr.add(wordCount);
-                map.put(wordCount.getWord(), arr);
-            } else {
-                map.get(wordCount.getWord()).add(wordCount);
-            }
-        }
-        return map;
+    private List<WordCount> calculateWordCount(List<String> wordList) {
+        Map<String, Long> wordCountMap = wordList.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        List<WordCount> wordCountList = wordCountMap.entrySet().stream()
+                .map(entry -> new WordCount(entry.getKey(), entry.getValue().intValue()))
+                .collect(Collectors.toList());
+        return wordCountList.stream()
+                .sorted(Comparator.comparing(WordCount::getCount).reversed())
+                .collect(Collectors.toList());
     }
 
     private String formatWordCountResult(List<WordCount> wordCountList) {
