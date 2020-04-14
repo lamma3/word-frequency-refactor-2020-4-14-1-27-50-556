@@ -31,8 +31,8 @@ public class WordFrequencyGame {
     private String formatWordCountResult(List<WordCount> wordCountList) {
         StringJoiner joiner = new StringJoiner(NEWLINE_DELIMITER);
         for (WordCount wordCount : wordCountList) {
-            String s = wordCount.getWord() + SPACE_DELIMITER + wordCount.getCount();
-            joiner.add(s);
+            String wordCountResultRow = wordCount.getWord() + SPACE_DELIMITER + wordCount.getCount();
+            joiner.add(wordCountResultRow);
         }
         return joiner.toString();
     }
