@@ -22,11 +22,8 @@ public class WordFrequencyGame {
         Map<String, Long> wordCountMap = wordList.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        List<WordCount> wordCountList = wordCountMap.entrySet().stream()
+        return wordCountMap.entrySet().stream()
                 .map(entry -> new WordCount(entry.getKey(), entry.getValue().intValue()))
-                .collect(Collectors.toList());
-
-        return wordCountList.stream()
                 .sorted(Comparator.comparing(WordCount::getCount).reversed())
                 .collect(Collectors.toList());
     }
