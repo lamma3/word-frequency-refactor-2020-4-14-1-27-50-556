@@ -7,16 +7,11 @@ public class WordFrequencyGame {
     private static final String SPACE_DELIMITER_PATTERN = "\\s+";
     private static final String NEWLINE_DELIMITER = "\n";
     private static final String SPACE_DELIMITER = " ";
-    private static final String CALCULATE_ERROR_MESSAGE = "Calculate Error";
 
     public String getResult(String sentence) {
-        try {
-            String[] sentenceSplitBySpace = splitBySpace(sentence);
-            List<WordCount> wordCountList = calculateWordCount(Arrays.asList(sentenceSplitBySpace));
-            return formatWordCountResult(wordCountList);
-        } catch (Exception e) {
-            return CALCULATE_ERROR_MESSAGE;
-        }
+        String[] sentenceSplitBySpace = splitBySpace(sentence);
+        List<WordCount> wordCountList = calculateWordCount(Arrays.asList(sentenceSplitBySpace));
+        return formatWordCountResult(wordCountList);
     }
 
     private String[] splitBySpace(String sentence) {
